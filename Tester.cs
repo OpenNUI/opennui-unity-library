@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-using NUIGatewayLibrary_Unity;
+using OpenNUI.Unity.Library;
 
 namespace Outside
 {

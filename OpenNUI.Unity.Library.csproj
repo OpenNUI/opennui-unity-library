@@ -4,17 +4,16 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{57B27826-5A32-4896-8ADC-00B979D8122A}</ProjectGuid>
-    <OutputType>Exe</OutputType>
+    <ProjectGuid>{EA48CEDB-5BD2-4A4C-92B7-4C51B3AF0D16}</ProjectGuid>
+    <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>TestConsoleApp</RootNamespace>
-    <AssemblyName>TestConsoleApp</AssemblyName>
+    <RootNamespace>OpenNUI.Unity.Library</RootNamespace>
+    <AssemblyName>OpenNUI.Unity.Library</AssemblyName>
     <TargetFrameworkVersion>v2.0</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
-    <PlatformTarget>AnyCPU</PlatformTarget>
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
@@ -22,9 +21,9 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
-    <PlatformTarget>AnyCPU</PlatformTarget>
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
     <OutputPath>bin\Release\</OutputPath>
@@ -32,25 +31,42 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
+  <PropertyGroup>
+    <RunPostBuildEvent>Always</RunPostBuildEvent>
+  </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
     <Reference Include="System.Data" />
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Program.cs" />
+    <Compile Include="Channel\Color.cs" />
+    <Compile Include="Channel\Depth.cs" />
+    <Compile Include="Channel\Skeleton.cs" />
+    <Compile Include="Dotnet20\MemoryMappedFile.cs" />
+    <Compile Include="Dotnet20\NamedPipeClient.cs" />
+    <Compile Include="Exceptions.cs" />
+    <Compile Include="Header.cs" />
+    <Compile Include="NUIApp.cs" />
+    <Compile Include="NUIApplication.cs" />
+    <Compile Include="NuiCoordinate.cs" />
+    <Compile Include="NuiSensor.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="App.config" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\NUIGatewayLibrary_Unity\NUIGatewayLibrary_Unity.csproj">
-      <Project>{ea48cedb-5bd2-4a4c-92b7-4c51b3af0d16}</Project>
-      <Name>NUIGatewayLibrary_Unity</Name>
-    </ProjectReference>
+    <Compile Include="SocketInfo.cs" />
+    <Compile Include="Stream\IPCStream.cs" />
+    <Compile Include="Stream\MessageReader.cs" />
+    <Compile Include="Stream\MessageWritter.cs" />
+    <Compile Include="Stream\TCPStream.cs" />
+    <Compile Include="Structs.cs" />
+    <Compile Include="Tester.cs" />
+    <Compile Include="Utils.cs" />
+    <Compile Include="Win32APIs.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <PropertyGroup>
+    <PostBuildEvent>
+    </PostBuildEvent>
+  </PropertyGroup>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
   <Target Name="BeforeBuild">

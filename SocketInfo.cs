@@ -1,7 +1,7 @@
 ﻿using System.Net.Sockets;
 using System.IO;
 
-namespace NUIGatewayLibrary_Unity
+namespace OpenNUI.Unity.Library
 {
     class SocketInfo
     {

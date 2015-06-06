@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Runtime.InteropServices;
 
-namespace NUIGatewayLibrary_Unity
+namespace OpenNUI.Unity.Library
 {
     class MemoryMappedFile : IDisposable
     {

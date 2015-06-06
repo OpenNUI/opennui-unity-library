@@ -5,7 +5,7 @@ using System.Text;
 using System.Net;
 using System.Net.Sockets;
 
-namespace NUIGatewayLibrary_Unity
+namespace OpenNUI.Unity.Library
 {
     public struct CWORK_STRUCT
     {

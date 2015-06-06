@@ -6,9 +6,9 @@ using System.Threading;
 using System.Runtime.InteropServices;
 using System.IO;
 
-namespace NUIGatewayLibrary_Unity
+namespace OpenNUI.Unity.Library
 {
-    unsafe class ColorChannel
+    unsafe class DepthChannel
     {
         public const int BlockCount = 3;
         int zero = 0;
@@ -20,9 +20,9 @@ namespace NUIGatewayLibrary_Unity
         byte* MappedPointer;
         int*[] lockDatas;
 
-        public ColorChannel(string mappedName, int width, int height, int chennel)
+        public DepthChannel(string mappedName, int width, int height, int bpp)
         {
-            this.capacity = width * height * chennel;
+            capacity = width * height * bpp;
 
             int l = mappedName.Length;
             mappedFile = MemoryMappedFile.OpenExisting(mappedName);
@@ -36,9 +36,10 @@ namespace NUIGatewayLibrary_Unity
             }
 
         }
-        public bool Read(out byte[] data)
+        public bool Read(out ushort[] data)
         {
-            data = new byte[0];
+            data = new ushort[0];
+            short[] shortdata = new short[0];
             for (int i = 0; i < BlockCount; i++)
             {
                 if (Interlocked.CompareExchange(ref *lockDatas[i], 1, 0) == 0)
@@ -48,9 +49,14 @@ namespace NUIGatewayLibrary_Unity
 
                     if (size > 0)
                     {
-                        data = new byte[size];
-                        mappedFileAccessor.Write<int>(sizeof(int) * BlockCount + (capacity + sizeof(int)) * i, ref zero); 
-                        Marshal.Copy((IntPtr)(MappedPointer + sizeof(int) * BlockCount + (capacity + sizeof(int)) * i + sizeof(int)), data, 0, capacity);
+                        data = new ushort[size / 2];
+                        shortdata = new short[size / 2];
+                        mappedFileAccessor.Write<int>(sizeof(int) * BlockCount + (capacity + sizeof(int)) * i, ref zero);
+
+                        Marshal.Copy((IntPtr)(MappedPointer + sizeof(int) * BlockCount + (capacity + sizeof(int)) * i + sizeof(int)), shortdata, 0, capacity / 2);
+
+                        System.Buffer.BlockCopy(shortdata, 0, data, 0, (size / 2) * 2);
+
                     }
                     Interlocked.Exchange(ref *lockDatas[i], 0);
                     break;

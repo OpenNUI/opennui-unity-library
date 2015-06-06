@@ -6,7 +6,7 @@ using System.Threading;
 using System.Runtime.InteropServices;
 using System.IO;
 
-namespace NUIGatewayLibrary_Unity
+namespace OpenNUI.Unity.Library
 {
     unsafe class SkeletonChannel
     {

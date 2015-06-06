@@ -3,9 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 2013
 VisualStudioVersion = 12.0.31101.0
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NUIGatewayLibrary_Unity", "NUIGatewayLibrary_Unity\NUIGatewayLibrary_Unity.csproj", "{EA48CEDB-5BD2-4A4C-92B7-4C51B3AF0D16}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TestConsoleApp", "TestConsoleApp\TestConsoleApp.csproj", "{57B27826-5A32-4896-8ADC-00B979D8122A}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OpenNUI.Unity.Library", "OpenNUI.Unity.Library.csproj", "{EA48CEDB-5BD2-4A4C-92B7-4C51B3AF0D16}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -17,10 +15,6 @@ Global
 		{EA48CEDB-5BD2-4A4C-92B7-4C51B3AF0D16}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{EA48CEDB-5BD2-4A4C-92B7-4C51B3AF0D16}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{EA48CEDB-5BD2-4A4C-92B7-4C51B3AF0D16}.Release|Any CPU.Build.0 = Release|Any CPU
-		{57B27826-5A32-4896-8ADC-00B979D8122A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{57B27826-5A32-4896-8ADC-00B979D8122A}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{57B27826-5A32-4896-8ADC-00B979D8122A}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{57B27826-5A32-4896-8ADC-00B979D8122A}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

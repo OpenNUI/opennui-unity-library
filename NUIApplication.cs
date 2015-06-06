@@ -4,7 +4,7 @@ using System.Text;
 using System.IO;
 
 
-namespace NUIGatewayLibrary_Unity
+namespace OpenNUI.Unity.Library
 {
 
     //Delegats

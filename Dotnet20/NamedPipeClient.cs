@@ -7,7 +7,7 @@ using System.IO;
 using System.Threading;
 
 
-namespace NUIGatewayLibrary_Unity
+namespace OpenNUI.Unity.Library
 {
     //데이터를 받기 위한 NamedPipe입니다.
     class NamedPipeClient_In

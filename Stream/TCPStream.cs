@@ -4,7 +4,7 @@ using System.Threading;
 using System.Net.Sockets;
 using System.Text;
 
-namespace NUIGatewayLibrary_Unity
+namespace OpenNUI.Unity.Library
 {
     class TCPStream
     {
