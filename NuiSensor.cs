@@ -31,11 +31,11 @@ namespace OpenNUI.Unity.Library
         }
         private ColorChannel colorChannel = null;
         private DepthChannel depthChannel = null;
-        private SkeletonChannel skeletonChannel = null;
+        private bodyChannel bodyChannel = null;
 
         private bool colorFrameAuthority = false;
         private bool depthFrameAuthority = false;
-        private bool skeletonFrameAuthority = false;
+        private bool bodyFrameAuthority = false;
         public bool ColorFrameAuthority
         {
             get { return colorFrameAuthority; }
@@ -44,14 +44,14 @@ namespace OpenNUI.Unity.Library
         {
             get { return depthFrameAuthority; }
         }
-        public bool SkeletonFrameAuthority
+        public bool BodyFrameAuthority
         {
-            get { return skeletonFrameAuthority; }
+            get { return bodyFrameAuthority; }
         }
 
         private bool colorFrameReady = false;
         private bool depthFrameReady = false;
-        private bool skeletonFrameReady = false;
+        private bool bodyFrameReady = false;
 
         private ImageData lastColorFrame = null;
         private DepthData lastDepthFrame = null;
@@ -117,7 +117,7 @@ namespace OpenNUI.Unity.Library
         public delegate void OpenFrameDelegate(NuiSensor sensor, bool success);
         public event OpenFrameDelegate OnColorFrameOpenComplete;
         public event OpenFrameDelegate OnDepthFrameOpenComplete;
-        public event OpenFrameDelegate OnSkeletonFrameOpenComplete;
+        public event OpenFrameDelegate OnBodyFrameOpenComplete;
 
         public delegate void StatusChangedDelegate(NuiSensor sensor, SensorState state);
         public event StatusChangedDelegate OnStatusChanged;
@@ -137,13 +137,13 @@ namespace OpenNUI.Unity.Library
         {
             OnColorFrameOpenComplete = null;
             OnDepthFrameOpenComplete = null;
-            OnSkeletonFrameOpenComplete = null;
+            OnBodyFrameOpenComplete = null;
             OnStatusChanged = null;
             OnDisconnected = null;
         }
 
         #region Open Frames
-        //Color, Depth, Skeleton SM을 만듬.
+        //Color, Depth, Body SM을 만듬.
         //만들어달라고 요청하는 것임, 실제로 만들어지기까지는 딜레이가 있음.
         public bool OpenColorFrame()
         {
@@ -159,12 +159,12 @@ namespace OpenNUI.Unity.Library
 
             return depthFrameAuthority = nuiApp.OpenDepthFrame(this);
         }
-        public bool OpenSkeletonFrame()
+        public bool OpenBodyFrame()
         {
             if (colorFrameReady)
                 return false;
 
-            return skeletonFrameAuthority = nuiApp.OpenSkeletonFrame(this);
+            return bodyFrameAuthority = nuiApp.OpenBodyFrame(this);
         }
         #endregion
 
@@ -185,13 +185,13 @@ namespace OpenNUI.Unity.Library
             if (OnDepthFrameOpenComplete != null)
                 nuiApp.Queue_Event(OnDepthFrameOpenComplete, this, success);
         }
-        internal void OpenSkeletonFrameCallback(bool success, SkeletonChannel channel)
+        internal void OpenBodyFrameCallback(bool success, bodyChannel channel)
         {
-            skeletonFrameReady = success;
-            skeletonChannel = channel;
+            bodyFrameReady = success;
+            bodyChannel = channel;
 
-            if (OnSkeletonFrameOpenComplete != null)
-                nuiApp.Queue_Event(OnSkeletonFrameOpenComplete, this, success);
+            if (OnBodyFrameOpenComplete != null)
+                nuiApp.Queue_Event(OnBodyFrameOpenComplete, this, success);
         }
         #endregion
 
@@ -228,13 +228,13 @@ namespace OpenNUI.Unity.Library
         //private static int alo = -1;
         public BodyData[] GetBodyData()
         {
-            if (!skeletonFrameAuthority)
-                throw new AuthorityException(AuthorityException.AuthorityTypes.Skeleton, this);
-            if (!skeletonFrameReady)
+            if (!bodyFrameAuthority)
+                throw new AuthorityException(AuthorityException.AuthorityTypes.Body, this);
+            if (!bodyFrameReady)
                 return null;
 
             byte[] buffer = null;
-            if (skeletonChannel.Read(out buffer) == false) // 쉐어드메모리 읽기 실패
+            if (bodyChannel.Read(out buffer) == false) // 쉐어드메모리 읽기 실패
                 return lastBodyFrame;
 
             MemoryStream stream = new MemoryStream(buffer);

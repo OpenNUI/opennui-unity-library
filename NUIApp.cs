@@ -197,7 +197,7 @@ namespace OpenNUI.Unity.Library
                     sensor.OpenDepthFrameCallback(true, new DepthChannel(mappedName, sensor.depthInfo.Width, sensor.depthInfo.Height, sensor.depthInfo.BytePerPixel) );
                     break;
 
-                case STCHeader.SEND_SKELETON_SM_NAME:
+                case STCHeader.SEND_BODY_SM_NAME:
                     sensorID = reader.ReadInt();
                     isCreated = reader.ReadBool();
 
@@ -211,7 +211,7 @@ namespace OpenNUI.Unity.Library
                     }
 
                     mappedName = reader.ReadString();
-                    sensor.OpenSkeletonFrameCallback(true, new SkeletonChannel(mappedName));
+                    sensor.OpenBodyFrameCallback(true, new bodyChannel(mappedName));
                     break;
                 #endregion
                 #region Sensor Datas
@@ -302,7 +302,7 @@ namespace OpenNUI.Unity.Library
         }
         #endregion
 
-        #region Open Color, Depth, Skeleton Frame
+        #region Open Color, Depth, Body Frame
         public bool OpenColorFrame(NuiSensor sensor)
         {
             if (connectedSensors.ContainsValue(sensor) == false)
@@ -325,13 +325,13 @@ namespace OpenNUI.Unity.Library
             pipeStream_Send.Send(sm_message);
             return true;
         }
-        public bool OpenSkeletonFrame(NuiSensor sensor)
+        public bool OpenBodyFrame(NuiSensor sensor)
         {
             if (connectedSensors.ContainsValue(sensor) == false)
                 return false;
 
             //스켈레톤 쉐어드메모리를 생성해달라고 요청합니다.
-            MessageWriter sm_message = new MessageWriter(CTSHeader.REQUEST_SKELETON_SM_NAME);
+            MessageWriter sm_message = new MessageWriter(CTSHeader.REQUEST_BODY_SM_NAME);
             sm_message.WriteInt(sensor.id);
             pipeStream_Send.Send(sm_message);
             return true;

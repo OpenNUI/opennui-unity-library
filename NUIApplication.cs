@@ -41,7 +41,7 @@ namespace OpenNUI.Unity.Library
         }
     }
 
-    public static class NUIApplication
+    public static class NuiApplication
     {
         public const int JointCount = 25;
 

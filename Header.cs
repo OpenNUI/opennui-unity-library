@@ -12,7 +12,7 @@ namespace OpenNUI.Unity.Library
         TEST_TEXTMESSAGE = 0x03,
         SEND_COLORFRAME_SM_NAME = 0x04,
         SEND_DEPTHFRAME_SM_NAME = 0x05,
-        SEND_SKELETON_SM_NAME = 0x06,
+        SEND_BODY_SM_NAME = 0x06,
         SEND_ALL_SENSOR_INFO = 0x07,
         SEND_NEW_SENSOR_INFO = 0x08,
         SEND_SENSOR_STATE = 0x09,
@@ -27,7 +27,7 @@ namespace OpenNUI.Unity.Library
         TEST_TEXTMESSAGE = 0x03,
         REQUEST_COLORFRAME_SM_NAME = 0x04,
         REQUEST_DEPTHFRAME_SM_NAME = 0x05,
-        REQUEST_SKELETON_SM_NAME = 0x06,
+        REQUEST_BODY_SM_NAME = 0x06,
 
     }
 }

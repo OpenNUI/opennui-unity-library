@@ -8,7 +8,7 @@ using System.IO;
 
 namespace OpenNUI.Unity.Library
 {
-    unsafe class SkeletonChannel
+    unsafe class bodyChannel
     {
         public const int BlockCount = 3;
         int zero = 0;
@@ -20,7 +20,7 @@ namespace OpenNUI.Unity.Library
         byte* MappedPointer;
         int*[] lockDatas;
 
-        public SkeletonChannel(string mappedName)
+        public bodyChannel(string mappedName)
         {
             int l = mappedName.Length;
             mappedFile = MemoryMappedFile.OpenExisting(mappedName);

@@ -8,7 +8,7 @@ namespace OpenNUI.Unity.Library
     {
         public enum AuthorityTypes
         {
-            Color, Depth, Skeleton
+            Color, Depth, Body
         }
         private AuthorityTypes noAuthority;
         public AuthorityTypes NoAuthority
