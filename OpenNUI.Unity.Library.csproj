@@ -43,7 +43,7 @@
   <ItemGroup>
     <Compile Include="Channel\Color.cs" />
     <Compile Include="Channel\Depth.cs" />
-    <Compile Include="Channel\Skeleton.cs" />
+    <Compile Include="Channel\Body.cs" />
     <Compile Include="Dotnet20\MemoryMappedFile.cs" />
     <Compile Include="Dotnet20\NamedPipeClient.cs" />
     <Compile Include="Exceptions.cs" />
