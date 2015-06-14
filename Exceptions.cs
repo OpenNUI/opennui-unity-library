@@ -15,16 +15,12 @@ namespace OpenNUI.Unity.Library
         {
             get { return noAuthority; }
         }
-        private NuiSensor sensor;
-        public NuiSensor Sensor
-        {
-            get { return sensor; }
-        }
+        public NuiSensor Sensor { get; private set; }
 
         public AuthorityException(AuthorityTypes noAuthority, NuiSensor sensor)
         {
             this.noAuthority = noAuthority;
-            this.sensor = sensor;
+            this.Sensor = sensor;
         }
 
         public override string Message
