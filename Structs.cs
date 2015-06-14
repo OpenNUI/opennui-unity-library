@@ -68,7 +68,7 @@ namespace OpenNUI.Unity.Library
         ThumbRight = 24,
     }
 
-    public static class SensorSupport
+    internal static class SensorSupport
     {
         public const int DEPTH = 0x01;
         public const int COLOR = 0x02;

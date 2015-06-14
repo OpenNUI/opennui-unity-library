@@ -31,7 +31,7 @@ namespace OpenNUI.Unity.Library
             }
         }
     }
-    public class NotConnectedExeption : Exception
+    public class NotConnectedException : Exception
     {
         public override string Message
         {

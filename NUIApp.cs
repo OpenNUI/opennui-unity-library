@@ -391,7 +391,7 @@ namespace OpenNUI.Unity.Library
         public NuiSensor[] GetSensors()
         {
             if (!isConnected)
-                throw new NotConnectedExeption();
+                throw new NotConnectedException();
 
             NuiSensor[] array = new NuiSensor[connectedSensors.Count];
             connectedSensors.Values.CopyTo(array, 0);
