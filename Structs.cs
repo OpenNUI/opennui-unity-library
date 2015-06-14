@@ -166,7 +166,7 @@ namespace OpenNUI.Unity.Library
         public int Height;
         public int BytePerPixel;
         public int Size { get { return Width * Height * BytePerPixel; } }
-        public ColorInfo(int width, int height, int bpp)
+        internal ColorInfo(int width, int height, int bpp)
         {
             Width = width;
             Height = height;
@@ -191,7 +191,7 @@ namespace OpenNUI.Unity.Library
 
         public int Size { get { return Width * Height * BytePerPixel; } }
 
-        public DepthInfo(int width, int height, short MinValue, short MaxValue, int bpp,
+        internal DepthInfo(int width, int height, short MinValue, short MaxValue, int bpp,
             bool EnableCoordinate = false,
             double JointDepthXMult = 0, double JointDepthXFix = 0,
             double JointDepthYMult = 0, double JointDepthYFix = 0,
@@ -217,7 +217,7 @@ namespace OpenNUI.Unity.Library
     public struct BodyInfo
     {
         public int MaxTrackingNumber;
-        public BodyInfo(int maxTrackingNumber)
+        internal BodyInfo(int maxTrackingNumber)
         {
             MaxTrackingNumber = maxTrackingNumber;
         }
@@ -268,7 +268,7 @@ namespace OpenNUI.Unity.Library
         public const int EVENT_DATA_SIZE = 260;
         public EventType EventType { get; private set; }
         public byte[] Data { get; set; }
-        public EventData(EventType type)
+        internal EventData(EventType type)
         {
             EventType = type;
             Data = new byte[256];
@@ -276,7 +276,7 @@ namespace OpenNUI.Unity.Library
 
 
         // 쓰기 함수 만들어야돠ㅣㅁ
-        public static EventData ToEvent(byte[] data, int offset = 0)
+        internal static EventData ToEvent(byte[] data, int offset = 0)
         {
             if (data.Length >= EventData.EVENT_DATA_SIZE + offset)
             {
