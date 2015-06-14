@@ -8,54 +8,60 @@ using System.IO;
 
 namespace OpenNUI.Unity.Library
 {
-    unsafe class bodyChannel
+    public unsafe class BodyChannel
     {
-        public const int BlockCount = 3;
-        int zero = 0;
+        [DllImport("msvcrt.dll", EntryPoint = "memcpy", CallingConvention = CallingConvention.Cdecl, SetLastError = false)]
+        public static unsafe extern void* CopyMemory(void* dest, void* src, ulong count);
 
-        public const int Capacity = 2048 * 6;
-
-        MemoryMappedFile mappedFile = null;
-        MemoryMappedViewAccessor mappedFileAccessor = null;
-        byte* MappedPointer;
-        int*[] lockDatas;
-
-        public bodyChannel(string mappedName)
+        private int BlockCount = 3;
+        private MemoryMappedFile _mappedFile = null;
+        private MemoryMappedViewAccessor mappedFileAccessor = null;
+        private byte* _mappedPointer;
+        private int*[] lockDatas;
+        private NuiSensor _sensor;
+        private long _stamp;
+        public BodyChannel(string mappedName, NuiSensor sensor)
         {
-            int l = mappedName.Length;
-            mappedFile = MemoryMappedFile.OpenExisting(mappedName);
-            mappedFileAccessor = mappedFile.CreateViewAccessor();
-            mappedFileAccessor.SafeMemoryMappedViewHandle_AcquirePointer(ref MappedPointer);
+            _sensor = sensor;
+            _mappedFile = MemoryMappedFile.OpenExisting(mappedName);
+            mappedFileAccessor = _mappedFile.CreateViewAccessor();
+            mappedFileAccessor.SafeMemoryMappedViewHandle_AcquirePointer(ref _mappedPointer);
 
             lockDatas = new int*[BlockCount];
             for (int i = 0; i < BlockCount; i++)
-            {
-                lockDatas[i] = (int*)(sizeof(int) * i + MappedPointer);
-            }
+                lockDatas[i] = (int*)(sizeof(int) * i + _mappedPointer);
 
+        }
+
+        public void Close()
+        {
+            _mappedFile.Dispose();
         }
         public bool Read(out byte[] data)
         {
-            data = new byte[0];
+            bool result = false;
+            data = new byte[8196 * 2];
             for (int i = 0; i < BlockCount; i++)
             {
-                if (Interlocked.CompareExchange(ref *lockDatas[i], 1, 0) == 0)
+                if (Interlocked.CompareExchange(ref *lockDatas[i], 1, 0) != 0)
+                    continue;
+
+                long stamp = *((long*)(_mappedPointer + sizeof(int) * BlockCount + (data.Length + sizeof(long)) * i));
+                if (_stamp < stamp)
                 {
-                    int size = 0;
-                    mappedFileAccessor.Read<int>(sizeof(int) * BlockCount + (Capacity + sizeof(int)) * i, out size);
-
-                    if (size > 0)
+                    fixed (byte* dest = &data[0])
                     {
-                        data = new byte[size];
-                        mappedFileAccessor.Write<int>(sizeof(int) * BlockCount + (Capacity + sizeof(int)) * i, ref zero);
-
-                        Marshal.Copy((IntPtr)(MappedPointer + sizeof(int) * BlockCount + (Capacity + sizeof(int)) * i + sizeof(int)), data, 0, Capacity);
+                        CopyMemory(dest, _mappedPointer + sizeof(int) * BlockCount + (data.Length + sizeof(long)) * i + sizeof(long),
+                             (ulong)data.Length
+                            );
                     }
-                    Interlocked.Exchange(ref *lockDatas[i], 0);
-                    break;
+                    _stamp = stamp;
+                    result = true;
                 }
+                Interlocked.Exchange(ref *lockDatas[i], 0);
+                return result;
             }
-            return data.Length > 0;
+            return result;
         }
     }
 }

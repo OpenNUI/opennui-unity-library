@@ -31,23 +31,11 @@ namespace OpenNUI.Unity.Library
         }
         private ColorChannel colorChannel = null;
         private DepthChannel depthChannel = null;
-        private bodyChannel bodyChannel = null;
+        private BodyChannel bodyChannel = null;
 
-        private bool colorFrameAuthority = false;
-        private bool depthFrameAuthority = false;
-        private bool bodyFrameAuthority = false;
-        public bool ColorFrameAuthority
-        {
-            get { return colorFrameAuthority; }
-        }
-        public bool DepthFrameAuthority
-        {
-            get { return depthFrameAuthority; }
-        }
-        public bool BodyFrameAuthority
-        {
-            get { return bodyFrameAuthority; }
-        }
+        public bool ColorFrameAuthority { get; private set; }
+        public bool DepthFrameAuthority { get; private set; }
+        public bool BodyFrameAuthority { get; private set; }
 
         private bool colorFrameReady = false;
         private bool depthFrameReady = false;
@@ -57,11 +45,12 @@ namespace OpenNUI.Unity.Library
         private DepthData lastDepthFrame = null;
         private BodyData[] lastBodyFrame = null;
 
-        public ColorInfo colorInfo;
-        public DepthInfo depthInfo;
+        public ColorInfo ColorInfo { get; private set; }
+        public DepthInfo DepthInfo { get; private set; }
+        public BodyInfo BodyInfo { get; private set; }
 
         internal NuiSensor(NUIApp nuiApp, string name, string company, int id, SensorState state,
-                        int colorFrameWidth, int colorFrameHeight, int colorbpp, int depthFrameWidth, int depthFrameHeight, int depthbpp, int maxtrackingbody)
+                        int colorFrameWidth, int colorFrameHeight, int colorbpp, int depthFrameWidth, int depthFrameHeight, int depthbpp, int maxTrackingbody)
         {
             this.nuiApp = nuiApp;
 
@@ -103,15 +92,17 @@ namespace OpenNUI.Unity.Library
                     break;
             }
 
-            colorInfo = new ColorInfo(colorFrameWidth, colorFrameHeight, colorbpp);
+            ColorInfo = new ColorInfo(colorFrameWidth, colorFrameHeight, colorbpp);
 
             if (EnableCoordinate)
-                depthInfo = new DepthInfo(depthFrameWidth, depthFrameHeight, short.MinValue, short.MaxValue, depthbpp,
+                DepthInfo = new DepthInfo(depthFrameWidth, depthFrameHeight, short.MinValue, short.MaxValue, depthbpp,
                     EnableCoordinate,
                     JointDepthXMult, JointDepthXFix, JointDepthYMult, JointDepthYFix,
                     DepthToJointZMult);
             else
-                depthInfo = new DepthInfo(depthFrameWidth, depthFrameHeight, short.MinValue, short.MaxValue, depthbpp);
+                DepthInfo = new DepthInfo(depthFrameWidth, depthFrameHeight, short.MinValue, short.MaxValue, depthbpp);
+
+            BodyInfo = new BodyInfo(maxTrackingbody);
         }
 
         public delegate void OpenFrameDelegate(NuiSensor sensor, bool success);
@@ -150,21 +141,21 @@ namespace OpenNUI.Unity.Library
             if (colorFrameReady)
                 return false;
 
-            return colorFrameAuthority = nuiApp.OpenColorFrame(this);
+            return ColorFrameAuthority = nuiApp.OpenColorFrame(this);
         }
         public bool OpenDepthFrame()
         {
             if (colorFrameReady)
                 return false;
 
-            return depthFrameAuthority = nuiApp.OpenDepthFrame(this);
+            return DepthFrameAuthority = nuiApp.OpenDepthFrame(this);
         }
         public bool OpenBodyFrame()
         {
             if (colorFrameReady)
                 return false;
 
-            return bodyFrameAuthority = nuiApp.OpenBodyFrame(this);
+            return BodyFrameAuthority = nuiApp.OpenBodyFrame(this);
         }
         #endregion
 
@@ -185,7 +176,7 @@ namespace OpenNUI.Unity.Library
             if (OnDepthFrameOpenComplete != null)
                 nuiApp.Queue_Event(OnDepthFrameOpenComplete, this, success);
         }
-        internal void OpenBodyFrameCallback(bool success, bodyChannel channel)
+        internal void OpenBodyFrameCallback(bool success, BodyChannel channel)
         {
             bodyFrameReady = success;
             bodyChannel = channel;
@@ -198,7 +189,7 @@ namespace OpenNUI.Unity.Library
         #region Get Frames
         public ImageData GetColorFrame()
         {
-            if (!colorFrameAuthority)
+            if (!ColorFrameAuthority)
                 throw new AuthorityException(AuthorityException.AuthorityTypes.Color, this);
             if (!colorFrameReady)
                 return null;
@@ -207,12 +198,12 @@ namespace OpenNUI.Unity.Library
             if (colorChannel.Read(out bits) == false) // 쉐어드메모리 읽기 실패
                 return lastColorFrame;
 
-            lastColorFrame = new ImageData(bits, colorInfo);
+            lastColorFrame = new ImageData(bits, ColorInfo);
             return lastColorFrame;
         }
         public DepthData GetDepthFrame()
         {
-            if (!depthFrameAuthority)
+            if (!DepthFrameAuthority)
                 throw new AuthorityException(AuthorityException.AuthorityTypes.Depth, this);
             if (!depthFrameReady)
                 return null;
@@ -222,13 +213,13 @@ namespace OpenNUI.Unity.Library
                 return lastDepthFrame;
 
             //[수정요망] Min,Max depthValue를 센서에서 받아온 데이터로 바꿔야함.
-            lastDepthFrame = new DepthData(bits, depthInfo);
+            lastDepthFrame = new DepthData(bits, DepthInfo);
             return lastDepthFrame;
         }
         //private static int alo = -1;
-        public BodyData[] GetBodyData()
+        public BodyData[] GetBodyFrame()
         {
-            if (!bodyFrameAuthority)
+            if (!BodyFrameAuthority)
                 throw new AuthorityException(AuthorityException.AuthorityTypes.Body, this);
             if (!bodyFrameReady)
                 return null;

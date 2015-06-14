@@ -59,14 +59,12 @@
     <Compile Include="Stream\MessageWritter.cs" />
     <Compile Include="Stream\TCPStream.cs" />
     <Compile Include="Structs.cs" />
-    <Compile Include="Tester.cs" />
     <Compile Include="Utils.cs" />
     <Compile Include="Win32APIs.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
-    <PostBuildEvent>
-    </PostBuildEvent>
+    <PostBuildEvent>copy "$(TargetPath)" "C:\OpenNUI"</PostBuildEvent>
   </PropertyGroup>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

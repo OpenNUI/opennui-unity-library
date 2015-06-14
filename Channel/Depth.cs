@@ -8,61 +8,60 @@ using System.IO;
 
 namespace OpenNUI.Unity.Library
 {
-    unsafe class DepthChannel
+    public unsafe class DepthChannel
     {
-        public const int BlockCount = 3;
-        int zero = 0;
+        [DllImport("msvcrt.dll", EntryPoint = "memcpy", CallingConvention = CallingConvention.Cdecl, SetLastError = false)]
+        public static unsafe extern void* CopyMemory(void* dest, void* src, ulong count);
 
-        public readonly int capacity;
+        private const int BlockCount = 3;
 
-        MemoryMappedFile mappedFile = null;
-        MemoryMappedViewAccessor mappedFileAccessor = null;
-        byte* MappedPointer;
-        int*[] lockDatas;
-
-        public DepthChannel(string mappedName, int width, int height, int bpp)
+        private MemoryMappedFile _mappedFile = null;
+        private MemoryMappedViewAccessor _mappedFileAccessor = null;
+        private byte* _mappedPointer;
+        private int*[] lockDatas;
+        private NuiSensor _sensor;
+        private long _stamp;
+        public DepthChannel(string mappedName, NuiSensor sensor)
         {
-            capacity = width * height * bpp;
-
-            int l = mappedName.Length;
-            mappedFile = MemoryMappedFile.OpenExisting(mappedName);
-            mappedFileAccessor = mappedFile.CreateViewAccessor();
-            mappedFileAccessor.SafeMemoryMappedViewHandle_AcquirePointer(ref MappedPointer);
+            _sensor = sensor;
+            _mappedFile = MemoryMappedFile.OpenExisting(mappedName);
+            _mappedFileAccessor = _mappedFile.CreateViewAccessor();
+            _mappedFileAccessor.SafeMemoryMappedViewHandle_AcquirePointer(ref _mappedPointer);
 
             lockDatas = new int*[BlockCount];
             for (int i = 0; i < BlockCount; i++)
-            {
-                lockDatas[i] = (int*)(sizeof(int) * i + MappedPointer);
-            }
-
+                lockDatas[i] = (int*)(sizeof(int) * i + _mappedPointer);
         }
-        public bool Read(out ushort[] data)
+        public void Close()
         {
-            data = new ushort[0];
-            short[] shortdata = new short[0];
+            _mappedFile.Dispose();
+        }
+        internal bool Read(out ushort[] data)
+        {
+            bool result = false;
+            data = new ushort[_sensor.DepthInfo.Size / sizeof(short)];
             for (int i = 0; i < BlockCount; i++)
             {
-                if (Interlocked.CompareExchange(ref *lockDatas[i], 1, 0) == 0)
+                if (Interlocked.CompareExchange(ref *lockDatas[i], 1, 0) != 0)
+                    continue;
+
+                long stamp = *((long*)(_mappedPointer + sizeof(int) * BlockCount + (_sensor.DepthInfo.Size + sizeof(long)) * i));
+                if (_stamp < stamp)
                 {
-                    int size = 0;
-                    mappedFileAccessor.Read<int>(sizeof(int) * BlockCount + (capacity + sizeof(int)) * i, out size);
-
-                    if (size > 0)
+                    fixed (ushort* dest = &data[0])
                     {
-                        data = new ushort[size / 2];
-                        shortdata = new short[size / 2];
-                        mappedFileAccessor.Write<int>(sizeof(int) * BlockCount + (capacity + sizeof(int)) * i, ref zero);
-
-                        Marshal.Copy((IntPtr)(MappedPointer + sizeof(int) * BlockCount + (capacity + sizeof(int)) * i + sizeof(int)), shortdata, 0, capacity / 2);
-
-                        System.Buffer.BlockCopy(shortdata, 0, data, 0, (size / 2) * 2);
-
+                        CopyMemory(dest, _mappedPointer + sizeof(int) * BlockCount + (_sensor.DepthInfo.Size + sizeof(long)) * i + sizeof(long),
+                             (ulong)_sensor.DepthInfo.Size
+                            );
                     }
-                    Interlocked.Exchange(ref *lockDatas[i], 0);
-                    break;
+                    _stamp = stamp;
+                    result = true;
                 }
+                Interlocked.Exchange(ref *lockDatas[i], 0);
+                return result;
             }
-            return data.Length > 0;
+            return result;
+
         }
     }
 }

@@ -177,7 +177,7 @@ namespace OpenNUI.Unity.Library
 
                     mappedName = reader.ReadString();
                     //[수정요망] 맨 뒤쪽 channel 지금은 4로 강제해놓음.
-                    sensor.OpenColorFrameCallback(true, new ColorChannel(mappedName, sensor.colorInfo.Width, sensor.colorInfo.Height, sensor.colorInfo.BytePerPixel));
+                    sensor.OpenColorFrameCallback(true, new ColorChannel(mappedName, sensor));
                     break;
 
                 case STCHeader.SEND_DEPTHFRAME_SM_NAME:
@@ -194,7 +194,7 @@ namespace OpenNUI.Unity.Library
                     }
 
                     mappedName = reader.ReadString();
-                    sensor.OpenDepthFrameCallback(true, new DepthChannel(mappedName, sensor.depthInfo.Width, sensor.depthInfo.Height, sensor.depthInfo.BytePerPixel) );
+                    sensor.OpenDepthFrameCallback(true, new DepthChannel(mappedName, sensor) );
                     break;
 
                 case STCHeader.SEND_BODY_SM_NAME:
@@ -211,7 +211,7 @@ namespace OpenNUI.Unity.Library
                     }
 
                     mappedName = reader.ReadString();
-                    sensor.OpenBodyFrameCallback(true, new bodyChannel(mappedName));
+                    sensor.OpenBodyFrameCallback(true, new BodyChannel(mappedName, sensor));
                     break;
                 #endregion
                 #region Sensor Datas
