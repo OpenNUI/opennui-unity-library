@@ -45,7 +45,7 @@ namespace OpenNUI.Unity.Library
     public class MessageExeption : Exception
     {
         private string message;
-        public MessageExeption(string message)
+        private MessageExeption(string message)
         {
             this.message = message;
         }
