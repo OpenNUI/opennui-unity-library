@@ -8,7 +8,7 @@ using System.IO;
 
 namespace OpenNUI.Unity.Library
 {
-    public unsafe class BodyChannel
+    unsafe class BodyChannel
     {
         [DllImport("msvcrt.dll", EntryPoint = "memcpy", CallingConvention = CallingConvention.Cdecl, SetLastError = false)]
         public static unsafe extern void* CopyMemory(void* dest, void* src, ulong count);
