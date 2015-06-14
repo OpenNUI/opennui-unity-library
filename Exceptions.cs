@@ -42,10 +42,10 @@ namespace OpenNUI.Unity.Library
         }
     }
 
-    public class MessageExeption : Exception
+    public class MessageException : Exception
     {
         private string message;
-        private MessageExeption(string message)
+        internal MessageException(string message)
         {
             this.message = message;
         }

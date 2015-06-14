@@ -363,7 +363,7 @@ namespace OpenNUI.Unity.Library
         {
             //연결 실패했는데 또 연결하려고하면 암것도안함.;
             if (isTryConnectService)
-                throw new MessageExeption("'ConnectService()' is Must be run once.");
+                throw new MessageException("'ConnectService()' is Must be run once.");
 
             isTryConnectService = true;
 
