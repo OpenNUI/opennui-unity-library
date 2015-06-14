@@ -17,7 +17,7 @@ namespace OpenNUI.Unity.Library
         }
         public NuiSensor Sensor { get; private set; }
 
-        public AuthorityException(AuthorityTypes noAuthority, NuiSensor sensor)
+        internal AuthorityException(AuthorityTypes noAuthority, NuiSensor sensor)
         {
             this.noAuthority = noAuthority;
             this.Sensor = sensor;
